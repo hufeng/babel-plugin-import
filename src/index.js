@@ -27,8 +27,8 @@ export default function({ types }) {
             return new Plugin(
               libraryName,
               libraryDirectory,
-              style,
               resources,
+              style,
               types
             );
           }
@@ -40,8 +40,8 @@ export default function({ types }) {
           new Plugin(
             opts.libraryName,
             opts.libraryDirectory,
+            opts.resources,
             opts.style,
-            resources,
             types
           )
         ];
