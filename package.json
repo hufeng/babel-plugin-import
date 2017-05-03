@@ -11,7 +11,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "pre-commit": [
-    "lint"
+    //"lint"
   ],
   "keywords": [
     "babel-plugin",

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import Plugin from './Plugin';
 
-export default function ({ types }) {
+export default function({ types }) {
   let plugins = null;
 
   // Only for test
@@ -21,15 +21,29 @@ export default function ({ types }) {
     // Init plugin instances once.
     if (!plugins) {
       if (Array.isArray(opts)) {
-        plugins = opts.map(({ libraryName, libraryDirectory, style, camel2DashComponentName, camel2UnderlineComponentName }) => {
-          assert(libraryName, 'libraryName should be provided');
-          return new Plugin(libraryName, libraryDirectory, style, camel2DashComponentName, camel2UnderlineComponentName, types);
-        });
+        plugins = opts.map(
+          ({ libraryName, libraryDirectory, style, resources }) => {
+            assert(libraryName, 'libraryName should be provided');
+            return new Plugin(
+              libraryName,
+              libraryDirectory,
+              style,
+              resources,
+              types
+            );
+          }
+        );
       } else {
         opts = opts || {};
         assert(opts.libraryName, 'libraryName should be provided');
         plugins = [
-          new Plugin(opts.libraryName, opts.libraryDirectory, opts.style, opts.camel2DashComponentName, opts.camel2UnderlineComponentName, types),
+          new Plugin(
+            opts.libraryName,
+            opts.libraryDirectory,
+            opts.style,
+            resources,
+            types
+          )
         ];
       }
     }
@@ -46,15 +60,15 @@ export default function ({ types }) {
     'ConditionalExpression',
     'IfStatement',
     'ExpressionStatement',
-    'ExportDefaultDeclaration',
+    'ExportDefaultDeclaration'
   ];
 
   const ret = {
-    visitor: { Program },
+    visitor: { Program }
   };
 
   for (const method of methods) {
-    ret.visitor[method] = function () {
+    ret.visitor[method] = function() {
       applyInstance(method, arguments, ret.visitor);
     };
   }
