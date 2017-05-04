@@ -27,7 +27,7 @@ ReactDOM.render(<div>
 ## Usage
 
 ```bash
-npm install babel-plugin-import --save-dev
+npm install babel-plugin-import-resolve --save-dev
 ```
 
 Via `.babelrc` or babel-loader.
@@ -53,7 +53,6 @@ Via `.babelrc` or babel-loader.
 {
   "libraryName": "material-ui",
   "libraryDirectory": "components",  // default: lib
-  "camel2DashComponentName": false,  // default: true
 }
 ```
 
