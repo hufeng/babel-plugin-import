@@ -128,3 +128,7 @@ import UploadImage from 'qmkit/upload-image'
   }
 }
 ```
+
+
+### screencast
+![screencast](https://raw.githubusercontent.com/hufeng/babel-plugin-import/master/images/screencast.png)
