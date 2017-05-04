@@ -1,16 +1,6 @@
-# babel-plugin-import
+# 感谢babel-plugin-import
 
-Modular import plugin for babel, compatible with [antd](https://github.com/ant-design/ant-design), [antd-mobile](https://github.com/ant-design/ant-design-mobile), and so on.
-
-[![NPM version](https://img.shields.io/npm/v/babel-plugin-import.svg?style=flat)](https://npmjs.org/package/babel-plugin-import)
-[![Build Status](https://img.shields.io/travis/ant-design/babel-plugin-import.svg?style=flat)](https://travis-ci.org/ant-design/babel-plugin-import)
-
-----
-
-## Why babel-plugin-import
-
-- [English Instruction](https://ant.design/docs/react/getting-started#Import-on-Demand)
-- [中文说明](https://ant.design/docs/react/getting-started-cn#%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD)
+Modular import plugin for babel
 
 ## Example
 
@@ -69,7 +59,7 @@ Via `.babelrc` or babel-loader.
 
 `options` can be an array.
 
-For Example: 
+For Example:
 
 ```javascript
 [
@@ -85,12 +75,57 @@ For Example:
 ]
 ```
 
-### style
+## 支持的模块名字的规则
+默认的babel-plugin-import支持的模块名字的规则是
+camel2DashComponentName或者camel2UnderlineComponentName
 
-- `["import", { "libraryName": "antd" }]`: import js modularly
-- `["import", { "libraryName": "antd", "style": true }]`: import js and css modularly (LESS/Sass source files)
-- `["import", { "libraryName": "antd", "style": "css" }]`: import js and css modularly (css built files)
+常常我们的命名风格并不完全符合这两种规则，所有我们改进支持自定义的模块命名风格,如：
 
-### Note
 
-babel-plugin-import will be not working if you add the library in webpack config [vender](https://webpack.github.io/docs/code-splitting.html#split-app-and-vendor-code). 
+```javascript
+//.babelrc
+{
+  "plugins": [
+    ["import", {
+      "libraryName": "qmkit",
+      "libraryDirectory": "",   // default: lib
+      "resources": {
+        "noop": "noop",
+        "_": "common/util",
+        "AsyncRouter": "async-router",
+        "routeWithSubRoutes": "route-with-subroutes",
+        "Api": "api",
+        "QMkit": "kit",
+        "QMImage": "image",
+        "UploadImage": "upload/upload-image",
+      }
+    }]
+  ]
+}
+```
+```javascript
+import {noop, _, listview, QMkit, UploadImg, Api} from 'qmkit'
+
+```
+(roughly) to
+
+```javascript
+import noop from 'qmkit/noop'
+import _ from 'qmkit/common/util'
+import listview from 'qmkit/list-view'
+import UploadImage from 'qmkit/upload-image'
+```
+
+### 配合typescript的使用
+```javascript
+//tsconfig.json
+{
+    "compilerOptions": {
+      "module": "es2015", //不能使用commonjs
+      "target": "es6",
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "node"
+    }
+  }
+}
+```
