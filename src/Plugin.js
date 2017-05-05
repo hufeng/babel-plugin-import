@@ -28,7 +28,7 @@ export default class Plugin {
         isDefault = true;
       }
 
-      if (!path) {
+      if (!modulePath) {
         throw new Error(`Could not find ${methodName} path`);
       }
 
