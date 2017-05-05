@@ -3,6 +3,25 @@ import { join } from 'path';
 /**
  * moduleResolver: {moduleName: {path: '', type: 'default|*|export'}}
  */
+
+// Examples of "full" imports:
+//      import * as name from 'module'; (ImportNamespaceSpecifier)
+//      import name from 'module'; (ImportDefaultSpecifier)
+
+// transform this:
+//      import Bootstrap, { Grid } from 'react-bootstrap';
+// into this:
+//      import Bootstrap from 'react-bootstrap';
+//transforms.push(types.importDeclaration(fullImports, types.stringLiteral(source)));
+
+// Examples of member imports:
+//      import { member } from 'module'; (ImportSpecifier)
+//      import { member as alias } from 'module' (ImportSpecifier)
+
+// transform this:
+//      import { Grid as gird } from 'react-bootstrap';
+// into this:
+//      import gird from 'react-bootstrap/lib/Grid';
 export default class Plugin {
   constructor(libraryName, libraryDirectory, moduleResolver, style, types) {
     this.specified = null;
@@ -50,6 +69,23 @@ export default class Plugin {
 
       this.selectedMethods[methodName] = null;
 
+      /**
+       * import {A, B, test} from 'uikit'
+       *
+       * transform =>
+       *
+       * 转换函数：specifiers.push(t.importNamespaceSpecifier(id));
+       *  import A from 'uikit/a' //type default
+       *  module a: export default
+       *
+       *  转换函数：specifiers.push(t.importDefaultSpecifier(id));
+       *  import * as B from 'uikit/b' //type *
+       *  module b => export a .. export b ... export c...
+       *
+       * specifiers.push(t.importSpecifier(id, t.identifier(imported)));
+       *  import {test} from 'uikit/test'
+       *   module test => export test ...
+       */
       if (moduleType === 'default') {
         this.selectedMethods[methodName] = file.addImport(path, 'default');
       } else if (moduleType === '*') {
