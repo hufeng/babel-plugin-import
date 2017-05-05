@@ -34,7 +34,7 @@ Via `.babelrc` or babel-loader.
 
 ```js
 {
-  "plugins": [["import", options]]
+  "plugins": [["import-resolve", options]]
 }
 ```
 
@@ -85,7 +85,7 @@ camel2DashComponentName或者camel2UnderlineComponentName
 //.babelrc
 {
   "plugins": [
-    ["import", {
+    ["import-resolve", {
       "libraryName": "qmkit",
       "libraryDirectory": "",   // default: lib
       "resources": {

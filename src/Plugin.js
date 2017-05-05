@@ -18,11 +18,29 @@ export default class Plugin {
     if (!this.selectedMethods[methodName]) {
       const libraryDirectory = this.libraryDirectory;
       const style = this.style;
-      const transformedMethodName = this.resources[methodName];
+      const meta = this.resources[methodName];
+      if (!meta) {
+        throw new Error(`Could not find ${methodName} meta data`);
+      }
+      const modulePath = meta.path;
+      let isDefault = meta['default'];
+      if (typeof isDefault == 'undefined') {
+        isDefault = true;
+      }
+
+      if (!path) {
+        throw new Error(`Could not find ${methodName} path`);
+      }
+
+      const transformedMethodName = modulePath;
       const path = winPath(
         join(this.libraryName, libraryDirectory, transformedMethodName)
       );
-      this.selectedMethods[methodName] = file.addImport(path, 'default');
+
+      this.selectedMethods[methodName] = isDefault
+        ? file.addImport(path, 'default')
+        : file.addImport(path, methodName);
+
       if (style === true) {
         file.addImport(`${path}/style`, 'style');
       } else if (style === 'css') {
