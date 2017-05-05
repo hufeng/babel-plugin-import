@@ -1,7 +1,10 @@
 import { join } from 'path';
 
+/**
+ * moduleResolver: {moduleName: {path: '', type: 'default|*|export'}}
+ */
 export default class Plugin {
-  constructor(libraryName, libraryDirectory, resources, style, types) {
+  constructor(libraryName, libraryDirectory, moduleResolver, style, types) {
     this.specified = null;
     this.libraryObjs = null;
     this.selectedMethods = null;
@@ -9,8 +12,7 @@ export default class Plugin {
     this.libraryDirectory = typeof libraryDirectory === 'undefined'
       ? 'lib'
       : libraryDirectory;
-    this.resources = resources;
-    this.style = style || false;
+    this.moduleResolver = moduleResolver;
     this.types = types;
   }
 
@@ -18,18 +20,27 @@ export default class Plugin {
     if (!this.selectedMethods[methodName]) {
       const libraryDirectory = this.libraryDirectory;
       const style = this.style;
-      const meta = this.resources[methodName];
-      if (!meta) {
-        throw new Error(`Could not find ${methodName} meta data`);
-      }
-      const modulePath = meta.path;
-      let isDefault = meta['default'];
-      if (typeof isDefault == 'undefined') {
-        isDefault = true;
+
+      //获取当前模块名的Resolver信息
+      const resolver = this.moduleResolver[methodName];
+      if (!resolver) {
+        throw new Error(
+          `Could not find ${methodName} resolver data in .babelrc`
+        );
       }
 
+      //当前模块映射的路径
+      const modulePath = resolver.path;
       if (!modulePath) {
-        throw new Error(`Could not find ${methodName} path`);
+        throw new Error(
+          `Could not find ${methodName} resolver path field in .babelrc`
+        );
+      }
+
+      //default|*|export
+      const moduleType = resolver.type;
+      if (!moduleType) {
+        throw new Error(`please specify ${methodName}'s resolver type.`);
       }
 
       const transformedMethodName = modulePath;
@@ -37,16 +48,17 @@ export default class Plugin {
         join(this.libraryName, libraryDirectory, transformedMethodName)
       );
 
-      this.selectedMethods[methodName] = isDefault
-        ? file.addImport(path, 'default')
-        : file.addImport(path, methodName);
+      this.selectedMethods[methodName] = null;
 
-      if (style === true) {
-        file.addImport(`${path}/style`, 'style');
-      } else if (style === 'css') {
-        file.addImport(`${path}/style/css`, 'style');
+      if (moduleType === 'default') {
+        this.selectedMethods[methodName] = file.addImport(path, 'default');
+      } else if (moduleType === '*') {
+        this.selectedMethods[methodName] = file.addImport(path, '*');
+      } else {
+        this.selectedMethods[methodName] = file.addImport(path, methodName);
       }
     }
+
     return this.selectedMethods[methodName];
   }
 
