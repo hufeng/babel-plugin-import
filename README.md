@@ -88,31 +88,51 @@ camel2DashComponentName或者camel2UnderlineComponentName
     ["import-resolve", {
       "libraryName": "qmkit",
       "libraryDirectory": "",   // default: lib
-      "resources": {
-        "noop": "noop",
-        "_": "common/util",
-        "AsyncRouter": "async-router",
-        "routeWithSubRoutes": "route-with-subroutes",
-        "Api": "api",
-        "QMkit": "kit",
-        "QMImage": "image",
-        "UploadImage": "upload/upload-image",
+      "libraryName": "qmkit",
+        "libraryDirectory": "",
+        "moduleResolver": {
+          "noop": {
+            "path": "noop",
+            "type": "default"
+          },
+          "_": {
+            "path": "common/util",
+            "type": "*"
+          },
+          "AsyncRouter": {
+            "path": "async-router",
+            "type": "default"
+          },
+          "routeWithSubRoutes": {
+            "path": "route-with-subroutes",
+            "type": "default"
+          },
+          "Api": {
+            "path": "api",
+            "type": "*"
+          },
+          "Alert": {
+            "path": "modal",
+            "type": "Alert"
+          }
+        }
       }
     }]
   ]
 }
 ```
 ```javascript
-import {noop, _, listview, QMkit, UploadImg, Api} from 'qmkit'
+import {noop, _, AsyncRouter, Api, Alert} from 'qmkit'
 
 ```
 (roughly) to
 
 ```javascript
 import noop from 'qmkit/noop'
-import _ from 'qmkit/common/util'
-import listview from 'qmkit/list-view'
-import UploadImage from 'qmkit/upload-image'
+import * as _ from 'qmkit/common/util'
+import AsyncRouter from 'qmkit/async-router'
+import * as Api from 'qmkit/api'
+import {Alert} from 'qmkit/modal'
 ```
 
 ### 配合typescript的使用
