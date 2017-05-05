@@ -22,7 +22,7 @@ export default function({ types }) {
     if (!plugins) {
       if (Array.isArray(opts)) {
         plugins = opts.map(
-          ({ libraryName, libraryDirectory, style, moduleResolver }) => {
+          ({ libraryName, libraryDirectory, moduleResolver }) => {
             assert(libraryName, 'libraryName should be provided');
             return new Plugin(
               libraryName,

@@ -23,7 +23,7 @@ import { join } from 'path';
 // into this:
 //      import gird from 'react-bootstrap/lib/Grid';
 export default class Plugin {
-  constructor(libraryName, libraryDirectory, moduleResolver, style, types) {
+  constructor(libraryName, libraryDirectory, moduleResolver, types) {
     this.specified = null;
     this.libraryObjs = null;
     this.selectedMethods = null;
