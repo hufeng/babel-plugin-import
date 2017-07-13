@@ -28,9 +28,8 @@ export default class Plugin {
     this.libraryObjs = null;
     this.selectedMethods = null;
     this.libraryName = libraryName;
-    this.libraryDirectory = typeof libraryDirectory === 'undefined'
-      ? 'lib'
-      : libraryDirectory;
+    this.libraryDirectory =
+      libraryDirectory == void 0 ? 'lib' : libraryDirectory;
     this.moduleResolver = moduleResolver;
     this.types = types;
   }
@@ -231,6 +230,19 @@ export default class Plugin {
   ExportDefaultDeclaration(path, { opts }) {
     const { node } = path;
     this.buildExpressionHandler(node, ['declaration'], path, opts);
+  }
+
+  NewExpression(path, { opts }) {
+    const { node } = path;
+    const { file } = path.hub;
+    const { types } = this;
+    const { name } = node.callee;
+
+    if (types.isIdentifier(node.callee)) {
+      if (this.specified[name]) {
+        node.callee = this.importMethod(this.specified[name], file, opts);
+      }
+    }
   }
 }
 

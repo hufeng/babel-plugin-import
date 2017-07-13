@@ -4,11 +4,6 @@ import Plugin from './Plugin';
 export default function({ types }) {
   let plugins = null;
 
-  // Only for test
-  global.__clearBabelAntdPlugin = () => {
-    plugins = null;
-  };
-
   function applyInstance(method, args, context) {
     for (const plugin of plugins) {
       if (plugin[method]) {
@@ -58,7 +53,8 @@ export default function({ types }) {
     'ConditionalExpression',
     'IfStatement',
     'ExpressionStatement',
-    'ExportDefaultDeclaration'
+    'ExportDefaultDeclaration',
+    'NewExpression'
   ];
 
   const ret = {

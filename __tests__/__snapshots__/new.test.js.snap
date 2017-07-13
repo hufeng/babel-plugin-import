@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`new varaible test new 1`] = `
+"import * as _ from 'uikit/star';
+import _default2 from 'uikit/noop';
+import _default from 'uikit/Loading';
+
+const l = new _default();
+console.log(_default2());
+console.log(_);"
+`;
